@@ -297,8 +297,9 @@ wchar_t compose(const std::vector<wchar_t>& src) {
     }
 }
 
+/*
 
-
+! Test Code !
 
 #include <iostream>
 #include <locale>
@@ -340,3 +341,5 @@ int main() {
 
     return 0;
 }
+
+*/
