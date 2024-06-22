@@ -154,6 +154,11 @@ bool isVowel(const wchar_t& src) {
     return (src >= VOWEL_START && src <= VOWEL_END);
 }
 
+bool isCons(const wchar_t& src) {
+    // Only works for compatibility jamo
+    return (src >= CONS_START && src <= CONS_END);
+}
+
 wchar_t convertJamo(const wchar_t& jamo) {
     // * Convert normal jamo to compatibility jamo
     if (jamo >= 0x1100 && jamo <= 0x1112) {
@@ -187,7 +192,7 @@ wchar_t combineDouble(const std::pair<wchar_t, wchar_t>& src) {
 }
 
 wchar_t construct2(const std::pair<wchar_t, wchar_t>& src) {
-    if (src.first < CONS_START || src.first > CONS_END || src.second < VOWEL_START || src.second > VOWEL_END) {
+    if (!isCons(src.first) || !isVowel(src.second)) {
         throw std::invalid_argument("construct2: src is not a double component syllable");
     }
     int idx = getIdxByVal(topMap, src.first) * 588 + getIdxByVal(midMap, src.second) * 28;
@@ -239,7 +244,7 @@ wchar_t compose(const std::vector<wchar_t>& src) {
     // if src is empty
     if (src.empty()) throw std::invalid_argument("compose: src is empty");
     // if src doesn't start with consonant, it should be a single vowel char
-    if (src[0] < CONS_START || src[0] > CONS_END) {
+    if (!isCons(src[0])) {
         switch (src.size()) {
             case 1:
                 return src[0];
@@ -257,7 +262,7 @@ wchar_t compose(const std::vector<wchar_t>& src) {
         return src[0];
     } else if (src.size() == 2) {
         //if src[1] is a vowel, it's a full syllable else it's a single consonant
-        if (src[1] >= VOWEL_START && src[1] <= VOWEL_END) {
+        if (isVowel(src[1])) {
             // There should be single consonant + single vowel
             return construct2(std::make_pair(src[0], src[1]));
         } else {
@@ -271,9 +276,9 @@ wchar_t compose(const std::vector<wchar_t>& src) {
         std::vector<wchar_t>::const_iterator it = src.begin();
         bool reachedMid = false; // Set to true when mid is found
         while (it != src.end()) {
-            if (*it >= CONS_START && *it <= CONS_END) {
+            if (isCons(*it)) {
                 reachedMid ? bot.push_back(*it) : top.push_back(*it);
-            } else if (*it >= VOWEL_START && *it <= VOWEL_END) {
+            } else if (isVowel(*it)) {
                 mid.push_back(*it);
                 reachedMid = true;
             } else {
