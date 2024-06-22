@@ -160,7 +160,7 @@ bool isCons(const wchar_t& src) {
 }
 
 wchar_t convertJamo(const wchar_t& jamo) {
-    // * Convert normal jamo to compatibility jamo
+    // Convert normal jamo to compatibility jamo
     if (jamo >= 0x1100 && jamo <= 0x1112) {
         return topMap.at(jamo);
     } else if (jamo >= 0x1161 && jamo <= 0x1175) {
@@ -173,7 +173,7 @@ wchar_t convertJamo(const wchar_t& jamo) {
 }
 
 std::pair<wchar_t, wchar_t> splitDouble(wchar_t src) {
-    // ! Src should have already been converted to compatibility jamo
+    // * Src should have already been converted to compatibility jamo
     if (!isCompatibilityJamo(src)) src = convertJamo(src);
     if (!isCompatibilityJamo(src)) throw std::invalid_argument("splitDouble: src is not a compatibility jamo");
 
