@@ -58,6 +58,7 @@ const std::map<wchar_t, wchar_t> midMap = {
     {0x1174, 0x3162}, //ㅢ
     {0x1175, 0x3163}, //ㅣ
 };
+
 const std::map<wchar_t, wchar_t> bottomMap = {
     {0x11A8, 0x3131}, //ㄱ
     {0x11A9, 0x3132}, //ㄲ
@@ -135,7 +136,6 @@ int getIdxByVal(const std::map<wchar_t, wchar_t>& m, const wchar_t& value) {
     }
     throw std::runtime_error("Not found");
 }
-
 
 bool isJamo(const wchar_t& src) {
     return (src >= JAMO_START && src <= JAMO_END);
