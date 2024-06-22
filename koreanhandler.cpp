@@ -286,8 +286,10 @@ wchar_t compose(const std::vector<wchar_t>& src) {
 
         wchar_t topL = top.size() == 1 ? top[0] : combineDouble(std::make_pair(top[0], top[1]));
         wchar_t midL = mid.size() == 1 ? mid[0] : combineDouble(std::make_pair(mid[0], mid[1]));
-        int botL = -1;
-        if (bot.size() != 0) botL = bot.size() == 1 ? bot[0] : combineDouble(std::make_pair(bot[0], bot[1]));
+        int botL = [&bot]() -> int {
+            if (bot.empty()) return -1;
+            return bot.size() == 1 ? bot[0] : combineDouble(std::make_pair(bot[0], bot[1]));
+        }();
         
         std::vector<wchar_t> arg = [&]() -> std::vector<wchar_t> {
         return (botL != -1) ? std::vector<wchar_t>{topL, midL, static_cast<wchar_t>(botL)}
