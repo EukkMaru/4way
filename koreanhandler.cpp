@@ -187,7 +187,6 @@ wchar_t combineDouble(const std::pair<wchar_t, wchar_t>& src) {
 }
 
 wchar_t construct2(const std::pair<wchar_t, wchar_t>& src) {
-    // TODO combine top consonant and mid vowel
     if (src.first < CONS_START || src.first > CONS_END || src.second < VOWEL_START || src.second > VOWEL_END) {
         throw std::invalid_argument("construct2: src is not a double component syllable");
     }
@@ -195,13 +194,12 @@ wchar_t construct2(const std::pair<wchar_t, wchar_t>& src) {
     return SYLLABLE_START + static_cast<wchar_t>(idx);
 }
 
-wchar_t construct3(const std::vector<wchar_t>& src) {
-    // TODO combine top consonant, mid vowel and bot consonant
-    if (src.size() != 3) {
-        throw std::invalid_argument("construct3: src is not a triple component syllable");
+wchar_t construct(const std::vector<wchar_t>& src) {
+    if (src.size() != 2 && src.size() != 3) {
+        throw std::invalid_argument("construct3: src is not a double or triple component syllable");
     }
-    int idx = getIdxByVal(topMap, src[0]) * 588 + getIdxByVal(midMap, src[1]) * 28 + getIdxByVal(bottomMap, src[2]) + 1;
-    return SYLLABLE_START + static_cast<wchar_t>(idx);
+    int idx = getIdxByVal(topMap, src[0]) * 588 + getIdxByVal(midMap, src[1]) * 28;
+    return SYLLABLE_START + static_cast<wchar_t>(src.size() == 3 ? idx + getIdxByVal(bottomMap, src[2]) + 1 : idx);
 }
 
 std::vector<wchar_t> decompose(const wchar_t& src) {
@@ -291,18 +289,16 @@ wchar_t compose(const std::vector<wchar_t>& src) {
         int botL = -1;
         if (bot.size() != 0) botL = bot.size() == 1 ? bot[0] : combineDouble(std::make_pair(bot[0], bot[1]));
         
-        if (botL == -1) {
-            return construct2(std::make_pair(topL, midL));
-        } else {
-            std::vector<wchar_t> arg = {topL, midL, static_cast<wchar_t>(botL)};
-            return construct3(arg);
-        }
+        std::vector<wchar_t> arg = [&]() -> std::vector<wchar_t> {
+        return (botL != -1) ? std::vector<wchar_t>{topL, midL, static_cast<wchar_t>(botL)}
+                            : std::vector<wchar_t>{topL, midL};
+        }();
+        return construct(arg);
     }
 }
 
-/*
 
-! TESTING CODE !
+
 
 #include <iostream>
 #include <locale>
@@ -344,5 +340,3 @@ int main() {
 
     return 0;
 }
-
-*/

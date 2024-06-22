@@ -102,6 +102,8 @@
     "streambuf": "cpp",
     "typeinfo": "cpp",
     "codecvt": "cpp",
-    "ctime": "cpp"
+    "ctime": "cpp",
+    "iomanip": "cpp",
+    "sstream": "cpp"
   }
 }
