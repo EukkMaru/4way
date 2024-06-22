@@ -251,7 +251,8 @@ wchar_t compose(const std::vector<wchar_t>& src) {
     }
     // if src starts with consonant, it's either a single consonant char or a full syllable
     // single consonant char can only be up to 2 components, but a full syllable can also be made of 2 components
-    // if length is 1 it is 100% consonant, if length is 2 we have to check
+    // if length is 1 it is 100% consonant or an invalid char
+    // if length is 2 we have to check
     if (src.size() == 1) {
         return src[0];
     } else if (src.size() == 2) {
