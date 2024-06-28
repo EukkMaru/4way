@@ -3,6 +3,9 @@
 
 #include <string>
 #include <cstdint>
+#include <sstream>
+#include <stdexcept>
+#include <map>
 
 class Cipher {
     public:
